@@ -1,7 +1,18 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"], 
+    "jsx": "react-jsx",
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true, // 추가
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["vite.config.ts", "src/**/*"]
 }
