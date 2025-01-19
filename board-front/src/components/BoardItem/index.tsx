@@ -1,6 +1,6 @@
 import { BoardListItem } from '@/types/interface'
 import './style.css'
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 //import DefaultProfileImage from 'assets/image/default-profile-image.png';
 import DefaultProfileImage from "../../assets/image/default-profile-image.png";
 
@@ -14,19 +14,19 @@ interface Props {
 // Board List Item 컴포넌트
 export default function BoardListItem({ boardListItem }:Props) {
 
-    const{  title, content, boardTitleImage} = boardListItem;
+    const{ boardNumber, title, content, boardTitleImage} = boardListItem;
     const { favoriteCount, commentCount, viewCount}=boardListItem;
     const { writeDatetime, writerNickname, writerProfileImage}=boardListItem;
 
 
-    //const navigator = useNavigate();
+    const navigator = useNavigate();
 
-    // const onClickHandler = ()=>{
-    //     navigator(boardNumber);
-    // }
+    const onClickHandler = ()=>{
+        navigator(boardNumber);
+    }
     // render: Board List Item 컴포넌트 렌더링
   return (
-    <div className='board-list-item'>
+    <div className='board-list-item' onClick={onClickHandler}>
       <div className='board-list-item-main-box'>
         <div className='board-list-item-top'>
           <div className='board-list-item-profile-box'>
@@ -48,7 +48,7 @@ export default function BoardListItem({ boardListItem }:Props) {
         </div>
         <div className='board-list-item-bottom'>
           <div className='board-list-item-counts'>
-            {`댓글 ${commentCount}. 좋아요 ${favoriteCount}. 조회수 ${viewCount}`}
+            {`댓글 ${commentCount}  좋아요 ${favoriteCount}  조회수 ${viewCount}`}
           </div>
         </div>
       </div>
