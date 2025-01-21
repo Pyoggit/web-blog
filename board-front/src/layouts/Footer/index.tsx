@@ -22,9 +22,9 @@ return(
             <div className='footer-top'>
                 <div className='footer-logo-box'>
                     <div className='icon-box'>
-                        <div className='icon logo-light-icon'></div>
+                        <div className='icon logo-main-icon'></div>
                     </div>
-                    <div className='footer-logo-text'>{'pyoard'}</div>
+                    <div className='footer-logo-text'>{'pyocompany'}</div>
                 </div>
                 <div className='footer-link-box'>  
                     <div className='footer-email-link'>{'wkdvy122851@gmail.com'}</div>
@@ -37,7 +37,7 @@ return(
                 </div>
             </div>
             <div className='footer-bottom'>
-                <div className='footer-copyright'>{'Copyright © 2025 pyo. All Rights Reserved.'}</div>
+                <div className='footer-copyright'>{'Copyright © 2025 pyocompany. All Rights Reserved.'}</div>
             </div>
         </div>
     </div>
