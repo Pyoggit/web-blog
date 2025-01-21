@@ -34,3 +34,19 @@
 .expand-right-light-icon {
   background-image: url(assets/image/expand-right-light.png);
 }
+
+.insta-icon {
+  background-image: url(assets/image/insta.png);
+}
+
+.naver-blog-icon {
+  background-image: url(assets/image/naver-blog.png);
+}
+
+.logo-main-icon {
+  background-image: url(assets/image/main-logo.png);
+}
+
+.search-light-icon {
+  background-image: url(assets/image/search-light.png);
+}
