@@ -8,31 +8,31 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// @Getter
-// @Setter
 @Data
 @NoArgsConstructor
 public class SignUpRequestDto {
 
     @NotBlank
     @Email
-    private String email;
+    private String email; // 사용자 이메일
 
     @NotBlank
     @Size(min = 8, max = 20)
-    private String password;
+    private String password; // 비밀번호 (8~20자)
 
     @NotBlank
-    private String nickname;
+    private String nickname; // 사용자 닉네임
+
     @NotBlank
-    @Pattern(regexp = "^[0-9]{11,13}$")
-    private String telNumber;
+    @Pattern(regexp = "^[0-9\\-]{11,13}$")
+    private String telNumber; // 전화번호 (하이픈 포함 가능)
+
     @NotBlank
-    private String address;
+    private String address; // 주소
+
     @NotBlank
-    private String addressDetail;
-    @NotBlank
+    private String addressDetail; // 상세 주소
+
     @AssertTrue
-    private Boolean agreedPersonal;
-
+    private Boolean agreedPersonal; // 개인정보 동의 여부
 }
