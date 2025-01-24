@@ -1,4 +1,4 @@
-export default interface SignInReqeustDto{
+export default interface SignInRequestDto{
     email: string;
     password: string;
 }

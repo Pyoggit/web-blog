@@ -36,13 +36,14 @@ public class WebsecurityConfig {
         @Bean
         protected SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
                 httpSecurity
-                                .cors(cors -> cors
-                                                .configurationSource(corsConfigurationSource()))
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                                 .csrf(CsrfConfigurer::disable)
                                 .httpBasic(HttpBasicConfigurer::disable)
                                 .sessionManagement(sessionManagement -> sessionManagement
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authorizeHttpRequests(request -> request
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Preflight 요청
+                                                                                                        // 허용
                                                 .requestMatchers("/", "/api/v1/auth/**", "/api/v1/search/**",
                                                                 "/file/**")
                                                 .permitAll()
@@ -54,36 +55,30 @@ public class WebsecurityConfig {
                                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return httpSecurity.build();
-
         }
 
         @Bean
         protected CorsConfigurationSource corsConfigurationSource() {
-
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.addAllowedOrigin("*");
+                configuration.addAllowedOriginPattern("*");
                 configuration.addAllowedMethod("*");
-                configuration.addExposedHeader("*");
+                configuration.addAllowedHeader("*");
+                configuration.addExposedHeader("Authorization");
+                configuration.setAllowCredentials(true);
 
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                 source.registerCorsConfiguration("/**", configuration);
 
                 return source;
-
         }
-
 }
 
 class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response,
                         AuthenticationException authException) throws IOException, ServletException {
-
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("{\"code\": \"AF\",\"message\":\"Authorization Failed\"}");
-
         }
-
 }
