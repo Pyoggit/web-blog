@@ -323,7 +323,7 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
           ref={passwordCheckRef} 
           label='비밀번호확인*' 
           type={passwordCheckType} 
-          placeholder='비밀번호를 다시 입려하세요' 
+          placeholder='비밀번호를 다시 입력하세요' 
           value={passwordCheck} 
   onChange={onPasswordCheckChangeHandler} 
   error={isPasswordCheckError} 
@@ -367,5 +367,4 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
           </div>
         </div>
       );      
-
 }
