@@ -269,6 +269,10 @@ const onNextButtonClickHandler = () => {
   setPage(2);
 };
 
+// event handler: 회원가입 버튼 클릭 이벤트 처리
+const onSignUpButtonClickHandler = () => {
+};
+
 // event handler: 로그인 링크 클릭 이벤트 처리
 const onSignInLinkClickHandler = () => {
   setView('sign-in');
@@ -350,6 +354,10 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
             )}
             {page === 2 && (
               <>
+              <InputBox />
+              <InputBox />
+              <InputBox />
+              <InputBox />
               </>
             )}
             </div>
@@ -362,7 +370,14 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
             )}
             {page === 2 && (
               <>
-              
+              <div className='auth-consent-box'>
+                <div className='auth-check-box'>
+                  <div className='check-ring-light-icon'></div>
+                </div>
+                <div className='auth-consent-title'>{'개인정보동의'}</div>
+                <div className='auth-consent-link'>{'더보기 >'}</div>
+              </div>
+              <div className='black-large-full-button' onClick={onSignUpButtonClickHandler}>{'회원 가입'}</div>
               </>
             )}
               <div className='auth-description-box'>
