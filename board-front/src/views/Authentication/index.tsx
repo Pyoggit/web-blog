@@ -110,12 +110,11 @@ const onEmailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
     passwordRef.current.focus();
   };
 
-// event handler: 이메일 입력 키 다운 이벤트 처리 //
+// event handler: 패스워드 확인 키 다운 이벤트 처리 //
 const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter') return;
-    onSignInButtonClickHandler();
-  };
-  
+  if (event.key !== 'Enter') return;
+  onSignInButtonClickHandler();
+};
 
     // render: sign in card 컴포넌트 렌더링 //
     return (
@@ -171,7 +170,7 @@ const addressRef = useRef<HTMLInputElement | null>(null);
 const addressDetailRef = useRef<HTMLInputElement | null>(null);
 
 // state: 페이지 번호 상태
-const [page, setPage] = useState<1 | 2>(1);
+const [page, setPage] = useState<1 | 2>(2);
 
 // state: 이메일 상태
 const [email, setEmail] = useState<string>('');
@@ -209,6 +208,15 @@ const [isPasswordError, setPasswordError] = useState<boolean>(false);
 // state: 패스워드 확인 에러 상태
 const [isPasswordCheckError, setPasswordCheckError] = useState<boolean>(false);
 
+// state: 닉네임 에러 상태
+const [isNicknameError, setNicknameError] = useState<boolean>(false);
+
+// state: 휴대폰번호 에러 상태
+const [isTelNumberError, setTelNumberError] = useState<boolean>(false);
+
+// state: 주소 에러 상태
+const [isAddressError, setAddressError] = useState<boolean>(false);
+
 // state: 이메일 에러 메시지 상태
 const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
 
@@ -217,6 +225,15 @@ const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
 
 // state: 패스워드 확인 에러 메시지 상태
 const [passwordCheckErrorMessage, setPasswordCheckErrorMessage] = useState<string>('');
+
+// state: 닉네임 에러 메세지 상태
+const [nicknameErrorMessage, setNicknameErrorMessage] = useState<string>('');
+
+// state: 핸드폰 번호 에러 메세지 상태
+const [telNumberErrorMessage, setTelNumberErrorMessage] = useState<string>('');
+
+// state: 주소 에러 메세지 상태
+const [addressErrorMessage, setAddressErrorMessage] = useState<string>('');
 
 // state: 패스워드 버튼 아이콘 상태 //
 const [passwordButtonIcon, setPasswordButtonIcon] = useState<'eye-light-off-icon' | 'eye-light-on-icon'>('eye-light-off-icon');
@@ -293,6 +310,11 @@ const onPasswordCheckButtonClickHandler = () =>{
 }
 
 // event handler: 다음 단계 버튼 클릭 이벤트 처리 //
+const onAddressButtonClickHandler = () =>{
+
+}
+
+// event handler: 다음 단계 버튼 클릭 이벤트 처리 //
 const onNextButtonClickHandler = () => {
   const emailPattern = /^[a-zA-Z0-9]*@([-.]?[a-zA-Z0-9])*\.[a-zA-Z]{2,4}$/;
   const isEmailPattern = emailPattern.test(email);
@@ -345,6 +367,22 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
   onNextButtonClickHandler();
+};
+// event handler: 닉네임 입력 키 다운 이벤트 처리 //
+const onNicknameKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+  if (event.key !== 'Enter') return;
+};
+// event handler: 휴대폰번호 입력 키 다운 이벤트 처리 //
+const onTelNumberKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+  if (event.key !== 'Enter') return;
+};
+// event handler: 주소 입력 키 다운 이벤트 처리 //
+const onAddressKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+  if (event.key !== 'Enter') return;
+};
+// event handler: 상세 주소 입력 키 다운 이벤트 처리 //
+const onAddressDetailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+  if (event.key !== 'Enter') return;
 };
 
 
@@ -402,10 +440,10 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
             )}
             {page === 2 && (
               <>
-              <InputBox ref={nicknameRef} label='닉네임*' type='text' placeholder='닉네임을 입력해주세요.' value={nickname} onChange={onNicknameChangeHandler} error={false}/>
-              <InputBox ref={telNumberRef} label='휴대폰 번호*' type='text' placeholder='휴대폰 번호를 입력해주세요.' value={telNumber} onChange={onTelNumberChangeHandler} error={false}/>
-              <InputBox ref={addressRef} label='주소*' type='text' placeholder='우편번호 찾기' value={address} onChange={onAddressChangeHandler} error={false} />
-              <InputBox ref={addressDetailRef} label='상세 주소' type='text' placeholder='상세주소를 입력해주세요.' value={addressDetail} onChange={onAddressDetailChangeHandler} error={false}/>
+              <InputBox ref={nicknameRef} label='닉네임*' type='text' placeholder='닉네임을 입력해주세요.' value={nickname} onChange={onNicknameChangeHandler} error={isNicknameError} message={nicknameErrorMessage} onKeyDown={onNicknameKeyDownHandler}/>
+              <InputBox ref={telNumberRef} label='휴대폰 번호*' type='text' placeholder='휴대폰 번호를 입력해주세요.' value={telNumber} onChange={onTelNumberChangeHandler} error={isTelNumberError} message={telNumberErrorMessage} onKeyDown={onTelNumberKeyDownHandler} />
+              <InputBox ref={addressRef} label='주소*' type='text' placeholder='우편번호 찾기' value={address} onChange={onAddressChangeHandler} error={isAddressError} message={addressErrorMessage} icon='expand-right-light-icon' onButtonClick={onAddressButtonClickHandler} onKeyDown={onAddressKeyDownHandler}/>
+              <InputBox ref={addressDetailRef} label='상세 주소' type='text' placeholder='상세주소를 입력해주세요.' value={addressDetail} onChange={onAddressDetailChangeHandler} error={false} onKeyDown={onAddressDetailKeyDownHandler} />
               </>
             )}
             </div>
