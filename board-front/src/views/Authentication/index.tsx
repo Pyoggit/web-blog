@@ -85,6 +85,13 @@ const onSignInButtonClickHandler = () => {
     signInRequest(requestBody).then(signInResponse);
 }
 
+// event handler: 회원가입 버튼 클릭 이벤트 처리 //
+const onSignUpButtonClickHandler = () => {
+    setView('sign-up');
+}
+
+
+
 // event handler: 패스워드 버튼 클릭 이벤트 처리 //
 const onPasswordButtonClickHandler = () => {
     if (passwordType === 'text') {
@@ -131,7 +138,7 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
               }
               <div className='black-large-full-button' onClick={onSignInButtonClickHandler}>{'로그인'}</div>
               <div className='auth-description-box'>
-                <div className='auth-description'>{'신규 회원이신가요?'}<span className='auth-description-link'>{'회원가입'}</span></div>
+                <div className='auth-description'>{'신규 회원이신가요?'}<span className='auth-description-link' onClick={onSignUpButtonClickHandler}>{'회원가입'}</span></div>
               </div>
             </div>
           </div>
@@ -141,7 +148,7 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 
   
   // component: sign up card 컴포넌트 //
-  const SignUpCard = () => {
+const SignUpCard = () => {
   // state: 이메일 요소 참조 상태
 const emailRef = useRef<HTMLInputElement | null>(null);
 
@@ -262,6 +269,11 @@ const onNextButtonClickHandler = () => {
   setPage(2);
 };
 
+// event handler: 로그인 링크 클릭 이벤트 처리
+const onSignInLinkClickHandler = () => {
+  setView('sign-in');
+};
+
 
 // event handler: 이메일 키 다운 이벤트 처리
 const onEmailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -287,66 +299,79 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
     // render: sign up card 컴포넌트 렌더링 //
     return(
       <div className='auth-card'>
-      <div className='auth-card-box'>
-        <div className='auth-card-top'>
-          <div className='auth-card-title'>{'회원가입'}</div>
-          <div className='auth-card-page'>{`${page}/2`}</div>
-        </div>
-        
-        <InputBox 
-          ref={emailRef} 
-          label='이메일 주소*' 
-          type='text' 
-          placeholder='이메일 주소를 입력해주세요' 
-          value={email} 
-  onChange={onEmailChangeHandler} 
-  error={isEmailError} 
-  message={emailErrorMessage} 
-  onKeyDown={onEmailKeyDownHandler}
-        />
-        
-        <InputBox 
-          ref={passwordRef} 
-          label='비밀번호*' 
-          type={passwordType} 
-          placeholder='비밀번호를 입력해주세요' 
-          value={password} 
-  onChange={onPasswordChangeHandler} 
-  error={isPasswordError} 
-  message={passwordErrorMessage} 
-  icon={passwordButtonIcon}
-  onButtonClick={onPasswordButtonClickHandler}
-  onKeyDown={onPasswordKeyDownHandler}
-        />
-        
-        <InputBox 
-          ref={passwordCheckRef} 
-          label='비밀번호확인*' 
-          type={passwordCheckType} 
-          placeholder='비밀번호를 다시 입력하세요' 
-          value={passwordCheck} 
-  onChange={onPasswordCheckChangeHandler} 
-  error={isPasswordCheckError} 
-  message={passwordCheckErrorMessage}
-  icon={passwordCheckButtonIcon}
-  onButtonClick={onPasswordCheckButtonClickHandler}
-  onKeyDown={onPasswordCheckKeyDownHandler}
-        />
-      </div>
-    
-      <div className='auth-card-bottom'>
-        <div className='black-large-full-button' onClick={onNextButtonClickHandler}>{'다음 단계'}</div>
-        <div className='auth-description-box'>
-          <div className='auth-description'>
-            {'이미 계정이 있으신가요? '}
-            <span className='auth-description-link'>{'로그인'}</span>
+        <div className='auth-card-box'>
+          <div className='auth-card-top'>
+            <div className='auth-card-title-box'>
+              <div className='auth-card-title'>{'회원가입'}</div>
+              <div className='auth-card-page'>{`${page}/2`}</div>
+            </div>
+            {page === 1 && (
+              <>
+                <InputBox 
+                ref={emailRef} 
+                label='이메일 주소*' 
+                type='text' 
+                placeholder='이메일 주소를 입력해주세요' 
+                value={email} 
+                onChange={onEmailChangeHandler} 
+                error={isEmailError} 
+                message={emailErrorMessage} 
+                onKeyDown={onEmailKeyDownHandler}
+                />
+              
+                <InputBox 
+                ref={passwordRef} 
+                label='비밀번호*' 
+                type={passwordType} 
+                placeholder='비밀번호를 입력해주세요' 
+                value={password} 
+                onChange={onPasswordChangeHandler} 
+                error={isPasswordError} 
+                message={passwordErrorMessage} 
+                icon={passwordButtonIcon}
+                onButtonClick={onPasswordButtonClickHandler}
+                onKeyDown={onPasswordKeyDownHandler}
+                />
+              
+                <InputBox 
+                ref={passwordCheckRef} 
+                label='비밀번호확인*' 
+                type={passwordCheckType} 
+                placeholder='비밀번호를 다시 입력하세요' 
+                value={passwordCheck} 
+                onChange={onPasswordCheckChangeHandler} 
+                error={isPasswordCheckError} 
+                message={passwordCheckErrorMessage}
+                icon={passwordCheckButtonIcon}
+                onButtonClick={onPasswordCheckButtonClickHandler}
+                onKeyDown={onPasswordCheckKeyDownHandler}
+                />
+              </>
+            )}
+            {page === 2 && (
+              <>
+              </>
+            )}
+            </div>
+      
+          <div className='auth-card-bottom'>
+            {page === 1 && (
+              <>
+                <div className='black-large-full-button' onClick={onNextButtonClickHandler}>{'다음 단계'}</div>
+              </>
+            )}
+            {page === 2 && (
+              <>
+              
+              </>
+            )}
+              <div className='auth-description-box'>
+                <div className='auth-description'>{'이미 계정이 있으신가요? '}<span className='auth-description-link' onClick={onSignInLinkClickHandler}>{'로그인'}</span></div>
+            </div>
           </div>
-        </div>
       </div>
     </div>
-    
-    )
-    
+    );
   };
   
     // render: 인증화면 컴포넌트 렌더링 //
