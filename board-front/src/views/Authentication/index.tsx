@@ -305,50 +305,66 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
               <div className='auth-card-title'>{'회원가입'}</div>
               <div className='auth-card-page'>{`${page}/2`}</div>
             </div>
-          
-            <InputBox 
-            ref={emailRef} 
-            label='이메일 주소*' 
-            type='text' 
-            placeholder='이메일 주소를 입력해주세요' 
-            value={email} 
-            onChange={onEmailChangeHandler} 
-            error={isEmailError} 
-            message={emailErrorMessage} 
-            onKeyDown={onEmailKeyDownHandler}
-            />
-          
-            <InputBox 
-            ref={passwordRef} 
-            label='비밀번호*' 
-            type={passwordType} 
-            placeholder='비밀번호를 입력해주세요' 
-            value={password} 
-            onChange={onPasswordChangeHandler} 
-            error={isPasswordError} 
-            message={passwordErrorMessage} 
-            icon={passwordButtonIcon}
-            onButtonClick={onPasswordButtonClickHandler}
-            onKeyDown={onPasswordKeyDownHandler}
-            />
-          
-            <InputBox 
-            ref={passwordCheckRef} 
-            label='비밀번호확인*' 
-            type={passwordCheckType} 
-            placeholder='비밀번호를 다시 입력하세요' 
-            value={passwordCheck} 
-            onChange={onPasswordCheckChangeHandler} 
-            error={isPasswordCheckError} 
-            message={passwordCheckErrorMessage}
-            icon={passwordCheckButtonIcon}
-            onButtonClick={onPasswordCheckButtonClickHandler}
-            onKeyDown={onPasswordCheckKeyDownHandler}
-            />
-          </div>
+            {page === 1 && (
+              <>
+                <InputBox 
+                ref={emailRef} 
+                label='이메일 주소*' 
+                type='text' 
+                placeholder='이메일 주소를 입력해주세요' 
+                value={email} 
+                onChange={onEmailChangeHandler} 
+                error={isEmailError} 
+                message={emailErrorMessage} 
+                onKeyDown={onEmailKeyDownHandler}
+                />
+              
+                <InputBox 
+                ref={passwordRef} 
+                label='비밀번호*' 
+                type={passwordType} 
+                placeholder='비밀번호를 입력해주세요' 
+                value={password} 
+                onChange={onPasswordChangeHandler} 
+                error={isPasswordError} 
+                message={passwordErrorMessage} 
+                icon={passwordButtonIcon}
+                onButtonClick={onPasswordButtonClickHandler}
+                onKeyDown={onPasswordKeyDownHandler}
+                />
+              
+                <InputBox 
+                ref={passwordCheckRef} 
+                label='비밀번호확인*' 
+                type={passwordCheckType} 
+                placeholder='비밀번호를 다시 입력하세요' 
+                value={passwordCheck} 
+                onChange={onPasswordCheckChangeHandler} 
+                error={isPasswordCheckError} 
+                message={passwordCheckErrorMessage}
+                icon={passwordCheckButtonIcon}
+                onButtonClick={onPasswordCheckButtonClickHandler}
+                onKeyDown={onPasswordCheckKeyDownHandler}
+                />
+              </>
+            )}
+            {page === 2 && (
+              <>
+              </>
+            )}
+            </div>
       
           <div className='auth-card-bottom'>
-            <div className='black-large-full-button' onClick={onNextButtonClickHandler}>{'다음 단계'}</div>
+            {page === 1 && (
+              <>
+                <div className='black-large-full-button' onClick={onNextButtonClickHandler}>{'다음 단계'}</div>
+              </>
+            )}
+            {page === 2 && (
+              <>
+              
+              </>
+            )}
               <div className='auth-description-box'>
                 <div className='auth-description'>{'이미 계정이 있으신가요? '}<span className='auth-description-link' onClick={onSignInLinkClickHandler}>{'로그인'}</span></div>
             </div>
