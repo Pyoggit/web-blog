@@ -85,6 +85,13 @@ const onSignInButtonClickHandler = () => {
     signInRequest(requestBody).then(signInResponse);
 }
 
+// event handler: 회원가입 버튼 클릭 이벤트 처리 //
+const onSignUpButtonClickHandler = () => {
+    setView('sign-up');
+}
+
+
+
 // event handler: 패스워드 버튼 클릭 이벤트 처리 //
 const onPasswordButtonClickHandler = () => {
     if (passwordType === 'text') {
@@ -131,7 +138,7 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
               }
               <div className='black-large-full-button' onClick={onSignInButtonClickHandler}>{'로그인'}</div>
               <div className='auth-description-box'>
-                <div className='auth-description'>{'신규 회원이신가요?'}<span className='auth-description-link'>{'회원가입'}</span></div>
+                <div className='auth-description'>{'신규 회원이신가요?'}<span className='auth-description-link' onClick={onSignUpButtonClickHandler}>{'회원가입'}</span></div>
               </div>
             </div>
           </div>
@@ -141,7 +148,7 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 
   
   // component: sign up card 컴포넌트 //
-  const SignUpCard = () => {
+const SignUpCard = () => {
   // state: 이메일 요소 참조 상태
 const emailRef = useRef<HTMLInputElement | null>(null);
 
