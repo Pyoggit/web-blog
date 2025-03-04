@@ -147,9 +147,9 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   };
 
   
-  // component: sign up card 컴포넌트 //
+// component: sign up card 컴포넌트 //
 const SignUpCard = () => {
-  // state: 이메일 요소 참조 상태
+// state: 이메일 요소 참조 상태
 const emailRef = useRef<HTMLInputElement | null>(null);
 
 // state: 패스워드 요소 참조 상태
@@ -157,6 +157,18 @@ const passwordRef = useRef<HTMLInputElement | null>(null);
 
 // state: 패스워드 확인 요소 참조 상태
 const passwordCheckRef = useRef<HTMLInputElement | null>(null);
+
+// state: 닉네임 요소 참조 상태
+const nicknameRef = useRef<HTMLInputElement | null>(null);
+
+// state: 휴대전화번호 요소 참조 상태
+const telNumberRef = useRef<HTMLInputElement | null>(null);
+
+// state: 주소 요소 참조 상태
+const addressRef = useRef<HTMLInputElement | null>(null);
+
+// state: 상세주소 요소 참조 상태
+const addressDetailRef = useRef<HTMLInputElement | null>(null);
 
 // state: 페이지 번호 상태
 const [page, setPage] = useState<1 | 2>(1);
@@ -354,10 +366,10 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
             )}
             {page === 2 && (
               <>
-              <InputBox />
-              <InputBox />
-              <InputBox />
-              <InputBox />
+              <InputBox ref={nicknameRef}/>
+              <InputBox ref={telNumberRef}/>
+              <InputBox ref={addressRef}/>
+              <InputBox ref={addressDetailRef}/>
               </>
             )}
             </div>
