@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie';
 import { MAIN_PATH } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { SignInRequestDto } from '@/apis/request/auth';
+import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 
 // component: 인증화면 컴포넌트 //
 export default function Authentication(){
@@ -89,8 +90,6 @@ const onSignInButtonClickHandler = () => {
 const onSignUpButtonClickHandler = () => {
     setView('sign-up');
 }
-
-
 
 // event handler: 패스워드 버튼 클릭 이벤트 처리 //
 const onPasswordButtonClickHandler = () => {
@@ -247,6 +246,9 @@ const [passwordButtonIcon, setPasswordButtonIcon] = useState<'eye-light-off-icon
 // state: 패스워드 버튼 아이콘 상태 //
 const [passwordCheckButtonIcon, setPasswordCheckButtonIcon] = useState<'eye-light-off-icon' | 'eye-light-on-icon'>('eye-light-off-icon');
 
+// function: 다음 주소 검색 팝업 오픈 함수 //
+const open = useDaumPostcodePopup();
+
 // event handler: 이메일 변경 이벤트 처리
 const onEmailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const { value } = event.target;
@@ -294,9 +296,9 @@ const onAddressDetailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 };
 
 // event handler: 개인 정보 동의 체크 박스 클릭 이벤트 처리
-const onAgreedPersonalClickHandler = (event: ChangeEvent<HTMLInputElement>) => {
-  const { checked } = event.target;
-  setAgreedPersonal(checked);
+const onAgreedPersonalClickHandler = () => {
+  setAgreedPersonal(!agreedPersonal);
+  setAgreedPersonalError(false);
 };
 
 // event handler: 패스워드 확인 변경 이벤트 처리
@@ -332,9 +334,9 @@ const onPasswordCheckButtonClickHandler = () =>{
   }
 }
 
-// event handler: 다음 단계 버튼 클릭 이벤트 처리 //
+// event handler: 주소 버튼 클릭 이벤트 처리 //
 const onAddressButtonClickHandler = () =>{
-
+  open({ onComplete});
 }
 
 // event handler: 다음 단계 버튼 클릭 이벤트 처리 //
@@ -365,6 +367,7 @@ const onNextButtonClickHandler = () => {
 
 // event handler: 회원가입 버튼 클릭 이벤트 처리
 const onSignUpButtonClickHandler = () => {
+  alert('회원가입 버튼!');
 };
 
 // event handler: 로그인 링크 클릭 이벤트 처리
@@ -389,24 +392,41 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 // event handler: 패스워드 확인 키 다운 이벤트 처리
 const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
+  if(!nicknameRef.current) return;
   onNextButtonClickHandler();
+  nicknameRef.current.focus();
+  
 };
 // event handler: 닉네임 입력 키 다운 이벤트 처리 //
 const onNicknameKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
+  if(!telNumberRef.current) return;
+  telNumberRef.current.focus();
 };
 // event handler: 휴대폰번호 입력 키 다운 이벤트 처리 //
 const onTelNumberKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
+  onAddressButtonClickHandler();
 };
 // event handler: 주소 입력 키 다운 이벤트 처리 //
 const onAddressKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
+  if(!addressDetailRef.current)return;
+  addressDetailRef.current.focus();
 };
 // event handler: 상세 주소 입력 키 다운 이벤트 처리 //
 const onAddressDetailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
+  onSignUpButtonClickHandler();
 };
+
+// event handler: 다음 주소 검색 완료 이벤트 처리 //
+const onComplete = (data: Address) => {
+  const { address } = data;
+  setAddress(address);
+  if(!addressDetailRef.current) return;
+  addressDetailRef.current.focus();
+}
 
 
     // render: sign up card 컴포넌트 렌더링 //
