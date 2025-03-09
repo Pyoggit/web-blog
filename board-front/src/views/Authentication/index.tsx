@@ -1,13 +1,13 @@
-import { useRef, useState, KeyboardEvent, ChangeEvent } from 'react';
+import { useRef, useState, KeyboardEvent, ChangeEvent, useEffect } from 'react';
 import './style.css'
 import InputBox from '@/components/InputBox';
-import { signInRequest } from '@/apis';
-import { SignInResponseDto } from '@/apis/response/auth';
+import { signInRequest, signUpRequest } from '@/apis';
+import { SignInResponseDto, SignUpResponseDto } from '@/apis/response/auth';
 import { ResponseDto } from '@/apis/response';
 import { useCookies } from 'react-cookie';
 import { MAIN_PATH } from '@/constant';
 import { useNavigate } from 'react-router-dom';
-import { SignInRequestDto } from '@/apis/request/auth';
+import { SignInRequestDto, SignUpRequestDto } from '@/apis/request/auth';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 
 // component: 인증화면 컴포넌트 //
@@ -169,7 +169,7 @@ const addressRef = useRef<HTMLInputElement | null>(null);
 const addressDetailRef = useRef<HTMLInputElement | null>(null);
 
 // state: 페이지 번호 상태
-const [page, setPage] = useState<1 | 2>(2);
+const [page, setPage] = useState<1 | 2>(1);
 
 // state: 이메일 상태
 const [email, setEmail] = useState<string>('');
@@ -249,6 +249,45 @@ const [passwordCheckButtonIcon, setPasswordCheckButtonIcon] = useState<'eye-ligh
 // function: 다음 주소 검색 팝업 오픈 함수 //
 const open = useDaumPostcodePopup();
 
+// function: sign up response 처리 함수 //
+const signUpResponse = (responseBody: SignUpResponseDto | Response | null) => {
+  if(!responseBody) {
+    alert('네트워크 이상입니다.');
+    return;
+  }
+
+  // 타입 가드: responseBody가 ResponseDto 타입인지 확인
+  if (!('code' in responseBody)) {
+    console.error("code 속성이 없는 응답입니다:", responseBody);
+    return;
+  }
+
+  const { code } = responseBody;
+  if(code === 'DE'){
+    setEmailError(true);
+    setEmailErrorMessage('중복되는 이메일 주소입니다');
+  }
+
+  if (code === 'DN') {
+    setNicknameError(true);
+    setNicknameErrorMessage('중복되는 닉네임입니다.');
+  }
+
+  if (code === 'DT') {
+      setTelNumberError(true);
+      setTelNumberErrorMessage('중복되는 핸드폰 번호입니다.');
+  }
+
+  if (code === 'VF') alert('모든 값을 입력하세요.');
+  if (code === 'DBE') alert('데이터베이스 오류입니다.');
+
+  if (code !== 'SU') return;
+
+  setView('sign-in');
+
+}
+
+
 // event handler: 이메일 변경 이벤트 처리
 const onEmailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const { value } = event.target;
@@ -323,7 +362,7 @@ const onPasswordButtonClickHandler = () =>{
 }
 // event handler: 패스워드 확인 버튼 클릭 이벤트 처리 //
 const onPasswordCheckButtonClickHandler = () =>{
-  if(passwordButtonIcon === 'eye-light-off-icon'){
+  if(passwordCheckButtonIcon === 'eye-light-off-icon'){
     setPasswordCheckButtonIcon('eye-light-on-icon');
     setPasswordCheckType('text');
   }
@@ -410,6 +449,11 @@ const onSignUpButtonClickHandler = () => {
 
   if(!hasNickname ||  !isTelNumberPattern || !agreedPersonal) return;
 
+  const requestBody: SignUpRequestDto = {
+    email, password, nickname, telNumber, address, addressDetail, agreedPersonal
+  };
+
+  signUpRequest(requestBody).then(signUpResponse);
 };
 
 // event handler: 로그인 링크 클릭 이벤트 처리
@@ -434,10 +478,7 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 // event handler: 패스워드 확인 키 다운 이벤트 처리
 const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
-  if(!nicknameRef.current) return;
   onNextButtonClickHandler();
-  nicknameRef.current.focus();
-  
 };
 // event handler: 닉네임 입력 키 다운 이벤트 처리 //
 const onNicknameKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -466,10 +507,19 @@ const onAddressDetailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
 const onComplete = (data: Address) => {
   const { address } = data;
   setAddress(address);
+  setAddressError(false);
+  setAddressErrorMessage('');
   if(!addressDetailRef.current) return;
   addressDetailRef.current.focus();
 }
 
+// effect: 페이지가 변경될 때 마다 실행 될 함수 //
+useEffect(() => {
+  if (page === 2) {
+    if(!nicknameRef.current)return;
+    nicknameRef.current.focus();
+  }
+}, [page])
 
     // render: sign up card 컴포넌트 렌더링 //
     return(

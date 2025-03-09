@@ -34,9 +34,9 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
             return responseBody;
         })
         .catch(error => {
-            if (!error.resposne.data) return null;
+            if (!error.response?.data) return null;
             const responseBody: ResponseDto = error.response.data;
             return responseBody;
-         });
+        });
     return result;
 };
