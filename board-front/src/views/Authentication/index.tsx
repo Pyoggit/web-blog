@@ -367,7 +367,49 @@ const onNextButtonClickHandler = () => {
 
 // event handler: 회원가입 버튼 클릭 이벤트 처리
 const onSignUpButtonClickHandler = () => {
-  alert('회원가입 버튼!');
+  const emailPattern = /^[a-zA-Z0-9]*@([-.]?[a-zA-Z0-9])*\.[a-zA-Z]{2,4}$/;
+  const isEmailPattern = emailPattern.test(email);
+
+  if (!isEmailPattern) {
+    setEmailError(true);
+    setEmailErrorMessage('이메일 주소 포맷이 맞지 않습니다.');
+  }
+
+  const isCheckedPassword = password.trim().length >= 8;
+  if (!isCheckedPassword) {
+    setPasswordError(true);
+    setPasswordErrorMessage('비밀번호는 8자 이상 입력해주세요.');
+  }
+
+  const isEqualPassword = password === passwordCheck;
+  if (!isEqualPassword) {
+    setPasswordCheckError(true);
+    setPasswordCheckErrorMessage('비밀번호가 일치하지 않습니다.');
+  }
+  if (!isEmailPattern || !isCheckedPassword || !isEqualPassword) {
+    setPage(1);
+    return;
+  }
+  const hasNickname = nickname.trim().length !== 0;
+  if(!hasNickname){
+    setNicknameError(true);
+    setNicknameErrorMessage('닉네임을 입력해주세요.');
+  }
+  const telNumberPattern = /^[0-9]{11,13}$/;
+  const isTelNumberPattern = telNumberPattern.test(telNumber);
+  if(!isTelNumberPattern) {
+    setTelNumberError(true);
+    setTelNumberErrorMessage('숫자만 입력해주세요.');
+  }
+  const hasAddress = address.trim().length > 0;
+  if(!hasAddress) {
+    setAddressError(true);
+    setAddressErrorMessage('주소를 선택해주세요');
+  }
+  if(agreedPersonal) setAgreedPersonalError(true);
+
+  if(!hasNickname ||  !isTelNumberPattern || !agreedPersonal) return;
+
 };
 
 // event handler: 로그인 링크 클릭 이벤트 처리
