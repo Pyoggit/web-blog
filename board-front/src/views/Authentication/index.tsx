@@ -169,7 +169,7 @@ const addressRef = useRef<HTMLInputElement | null>(null);
 const addressDetailRef = useRef<HTMLInputElement | null>(null);
 
 // state: 페이지 번호 상태
-const [page, setPage] = useState<1 | 2>(2);
+const [page, setPage] = useState<1 | 2>(1);
 
 // state: 이메일 상태
 const [email, setEmail] = useState<string>('');
@@ -255,6 +255,13 @@ const signUpResponse = (responseBody: SignUpResponseDto | Response | null) => {
     alert('네트워크 이상입니다.');
     return;
   }
+
+  // 타입 가드: responseBody가 ResponseDto 타입인지 확인
+  if (!('code' in responseBody)) {
+    console.error("code 속성이 없는 응답입니다:", responseBody);
+    return;
+  }
+
   const { code } = responseBody;
   if(code === 'DE'){
     setEmailError(true);
