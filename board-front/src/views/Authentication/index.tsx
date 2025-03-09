@@ -1,13 +1,13 @@
 import { useRef, useState, KeyboardEvent, ChangeEvent } from 'react';
 import './style.css'
 import InputBox from '@/components/InputBox';
-import { signInRequest } from '@/apis';
-import { SignInResponseDto } from '@/apis/response/auth';
+import { signInRequest, signUpRequest } from '@/apis';
+import { SignInResponseDto, SignUpResponseDto } from '@/apis/response/auth';
 import { ResponseDto } from '@/apis/response';
 import { useCookies } from 'react-cookie';
 import { MAIN_PATH } from '@/constant';
 import { useNavigate } from 'react-router-dom';
-import { SignInRequestDto } from '@/apis/request/auth';
+import { SignInRequestDto, SignUpRequestDto } from '@/apis/request/auth';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 
 // component: 인증화면 컴포넌트 //
@@ -249,6 +249,38 @@ const [passwordCheckButtonIcon, setPasswordCheckButtonIcon] = useState<'eye-ligh
 // function: 다음 주소 검색 팝업 오픈 함수 //
 const open = useDaumPostcodePopup();
 
+// function: sign up response 처리 함수 //
+const signUpResponse = (responseBody: SignUpResponseDto | Response | null) => {
+  if(!responseBody) {
+    alert('네트워크 이상입니다.');
+    return;
+  }
+  const { code } = responseBody;
+  if(code === 'DE'){
+    setEmailError(true);
+    setEmailErrorMessage('중복되는 이메일 주소입니다');
+  }
+
+  if (code === 'DN') {
+    setNicknameError(true);
+    setNicknameErrorMessage('중복되는 닉네임입니다.');
+  }
+
+  if (code === 'DT') {
+      setTelNumberError(true);
+      setTelNumberErrorMessage('중복되는 핸드폰 번호입니다.');
+  }
+
+  if (code === 'VF') alert('모든 값을 입력하세요.');
+  if (code === 'DBE') alert('데이터베이스 오류입니다.');
+
+  if (code !== 'SU') return;
+
+  setView('sign-in');
+
+}
+
+
 // event handler: 이메일 변경 이벤트 처리
 const onEmailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const { value } = event.target;
@@ -410,6 +442,11 @@ const onSignUpButtonClickHandler = () => {
 
   if(!hasNickname ||  !isTelNumberPattern || !agreedPersonal) return;
 
+  const requestBody: SignUpRequestDto = {
+    email, password, nickname, telNumber, address, addressDetail, agreedPersonal
+  };
+
+  signUpRequest(requestBody).then(signUpResponse);
 };
 
 // event handler: 로그인 링크 클릭 이벤트 처리
