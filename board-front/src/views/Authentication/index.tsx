@@ -513,6 +513,7 @@ const onComplete = (data: Address) => {
   addressDetailRef.current.focus();
 }
 
+// effect: 페이지가 변경될 때 마다 실행 될 함수 //
 useEffect(() => {
   if (page === 2) {
     if(!nicknameRef.current)return;
