@@ -390,7 +390,7 @@ const onSignUpButtonClickHandler = () => {
     setPage(1);
     return;
   }
-  const hasNickname = nickname.length !== 0;
+  const hasNickname = nickname.trim().length !== 0;
   if(!hasNickname){
     setNicknameError(true);
     setNicknameErrorMessage('닉네임을 입력해주세요.');
@@ -401,11 +401,12 @@ const onSignUpButtonClickHandler = () => {
     setTelNumberError(true);
     setTelNumberErrorMessage('숫자만 입력해주세요.');
   }
-  const hasAddress = address.length > 0;
+  const hasAddress = address.trim().length > 0;
   if(!hasAddress) {
     setAddressError(true);
     setAddressErrorMessage('주소를 선택해주세요');
   }
+  if(agreedPersonal) setAgreedPersonalError(true);
 };
 
 // event handler: 로그인 링크 클릭 이벤트 처리
