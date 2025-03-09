@@ -407,6 +407,9 @@ const onSignUpButtonClickHandler = () => {
     setAddressErrorMessage('주소를 선택해주세요');
   }
   if(agreedPersonal) setAgreedPersonalError(true);
+
+  if(!hasNickname ||  !isTelNumberPattern || !agreedPersonal) return;
+
 };
 
 // event handler: 로그인 링크 클릭 이벤트 처리
