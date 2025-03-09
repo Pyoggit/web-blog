@@ -362,7 +362,7 @@ const onPasswordButtonClickHandler = () =>{
 }
 // event handler: 패스워드 확인 버튼 클릭 이벤트 처리 //
 const onPasswordCheckButtonClickHandler = () =>{
-  if(passwordButtonIcon === 'eye-light-off-icon'){
+  if(passwordCheckButtonIcon === 'eye-light-off-icon'){
     setPasswordCheckButtonIcon('eye-light-on-icon');
     setPasswordCheckType('text');
   }
