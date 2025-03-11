@@ -192,6 +192,9 @@ useEffect(() => {
     setUserPage(isUserPage);
 }, [pathname]);
 
+useEffect(() => {
+    setLogin(loginUser !== null);
+}, [loginUser])
 
 // render: 헤더 레이아웃 렌더링 //
     return (
