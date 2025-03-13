@@ -1,5 +1,6 @@
 package com.pyo.board_back.service.implement;
 
+import java.io.File;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,16 @@ public class FileServiceImplement implements FileService{
         String uuid = UUID.randomUUID().toString();
         String saveFileName = uuid + extension;
         String savePath = filePath + saveFileName;
+
+        try{
+            file.transferTo(new File(savePath));
+        }catch(Exception exception){
+            exception.printStackTrace();
+            return null;
+        }
+
+        String url = fileUrl + saveFileName;
+        return url;
     }
 
     @Override
