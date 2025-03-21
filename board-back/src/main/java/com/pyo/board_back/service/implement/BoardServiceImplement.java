@@ -12,6 +12,7 @@ import com.pyo.board_back.dto.response.board.PostBoardResponseDto;
 import com.pyo.board_back.entity.BoardEntity;
 import com.pyo.board_back.entity.ImageEntity;
 import com.pyo.board_back.repository.BoardRepository;
+import com.pyo.board_back.repository.ImageRepository;
 import com.pyo.board_back.repository.UserRepository;
 import com.pyo.board_back.service.BoardService;
 
@@ -23,6 +24,7 @@ public class BoardServiceImplement implements BoardService{
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     public ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email) {
@@ -43,6 +45,8 @@ public class BoardServiceImplement implements BoardService{
                 ImageEntity imageEntity = new ImageEntity(boardNumber , image);
                 imageEntities.add(imageEntity);
             }
+
+            imageRepository.saveAll(imageEntities);
 
         } catch (Exception exception) {
             exception.printStackTrace();
