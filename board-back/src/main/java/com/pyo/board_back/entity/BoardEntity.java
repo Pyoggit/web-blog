@@ -1,5 +1,7 @@
 package com.pyo.board_back.entity;
 
+import com.pyo.board_back.dto.request.board.PostBoardRequestDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,4 +28,9 @@ public class BoardEntity {
     private int commentCount;
     private int viewCount;
     private String writerEmail;
+
+    //dto 생성자 이메일
+    public BoardEntity(PostBoardRequestDto dto, String email){
+        
+    }
 }
