@@ -45,7 +45,7 @@ public class BoardEntity {
         this.favoriteCount = 0;
         this.commentCount = 0;
         this.viewCount = 0;
-        thus.writerEmail = email;
+        this.writerEmail = email;
 
     }
 }
