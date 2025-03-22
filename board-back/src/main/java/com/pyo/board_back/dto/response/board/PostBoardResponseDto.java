@@ -21,9 +21,14 @@ public class PostBoardResponseDto extends ResponseDto {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    public static ResponseEntity<ResponseDto> notExistUser() {
-        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_USER, ResponseMessage.NOT_EXISTED_USER);
+    public static ResponseEntity<PostBoardResponseDto> notExistUser() {
+        PostBoardResponseDto result = new PostBoardResponseDto();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
     }
+    
+    public static ResponseEntity<PostBoardResponseDto> postDatabaseError() {
+        PostBoardResponseDto result = new PostBoardResponseDto();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+    }    
+    
 }
-
