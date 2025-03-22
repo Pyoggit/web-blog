@@ -3,6 +3,7 @@ package com.pyo.board_back.service.implement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +28,16 @@ public class BoardServiceImplement implements BoardService{
     private final ImageRepository imageRepository;
 
     @Override
-    public ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email) {
+    public ResponseEntity<PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email) {
 
         try {
-            boolean existedEmail = userRespository.existsByEmail(email);
+            boolean existedEmail = userRepository.existsByEmail(email); 
             if (!existedEmail) return PostBoardResponseDto.notExistUser();
 
             BoardEntity boardEntity = new BoardEntity(dto, email);
             boardRepository.save(boardEntity);
 
             int boardNumber = boardEntity.getBoardNumber();
-
             List<String> boardImageList = dto.getBoardImageList();
             List<ImageEntity> imageEntities = new ArrayList<>();
 
@@ -50,10 +50,9 @@ public class BoardServiceImplement implements BoardService{
 
         } catch (Exception exception) {
             exception.printStackTrace();
-            return ResponseDto.databaseError();
+            return PostBoardResponseDto.postDatabaseError();
         }
 
         return PostBoardResponseDto.success();
     }
-
 }
