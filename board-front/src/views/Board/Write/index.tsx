@@ -8,8 +8,7 @@ export default function BoardWrite(){
             <div className='board-write-container'>
                 <div className='board-write-box'>
                     <div className='board-write-title-box'>
-                        <div className='board-write-title-input'>
-                        </div>
+                        <input className='board-write-title-input' />
                     </div>
                     <div className='divider'></div>
                     <div className='board-write-content-box'>
