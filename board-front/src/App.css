@@ -155,3 +155,11 @@
 .check-ring-light-icon {
   background-image: url(assets/image/check-ring-light.png);
 }
+
+.image-box-light-icon{
+  background-image: url(assets/image/image-box-light.png);
+}
+
+.close-icon{
+  background-image: url(assets/image/close.png);
+}
