@@ -1,3 +1,8 @@
+.divider {
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
 .black-button {
   border-radius: 46px;
   width: 95px;
