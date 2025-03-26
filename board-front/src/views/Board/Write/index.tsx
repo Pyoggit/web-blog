@@ -29,6 +29,10 @@ export default function BoardWrite(){
  const onContentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
     setContent(value);
+
+    if (!contentRef.current)return;
+    contentRef.current.style.height = 'auto';
+    contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
  }
 
  // effect: 마운트시 실행할 함수 //
@@ -42,7 +46,7 @@ export default function BoardWrite(){
             <div className='board-write-container'>
                 <div className='board-write-box'>
                     <div className='board-write-title-box'>
-                        <input className='board-write-title-input' type='text' placeholder='제목을 작성해주세요.' value={title} onChange={onTitleChangeHandler} />
+                        <input className='board-write-title-textarea' type='text' placeholder='제목을 작성해주세요.' value={title} onChange={onTitleChangeHandler} />
                     </div>
                     <div className='divider'></div>
                     <div className='board-write-content-box'>
