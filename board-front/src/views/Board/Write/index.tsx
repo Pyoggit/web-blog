@@ -6,6 +6,8 @@ import { useBoardStore } from '@/stores';
 export default function BoardWrite(){
 
 
+ // state: 제목 영역 요소 참조 상태 //
+ const titleRef = useRef<HTMLTextAreaElement | null>(null);
  // state: 본문 영역 요소 참조 상태 //
  const contentRef = useRef<HTMLTextAreaElement | null>(null);
  // state: 이미지 입력 요소 참조 상태 //
@@ -20,9 +22,13 @@ export default function BoardWrite(){
  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
  // event handler: 제목 변경 이벤트 처리 //
- const onTitleChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+ const onTitleChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
     setTitle(value);
+
+    if (!titleRef.current)return;
+    titleRef.current.style.height = 'auto';
+    titleRef.current.style.height = `${titleRef.current.scrollHeight}px`;
  }
 
  // event handler: 내용 변경 이벤트 처리 //
@@ -46,7 +52,7 @@ export default function BoardWrite(){
             <div className='board-write-container'>
                 <div className='board-write-box'>
                     <div className='board-write-title-box'>
-                        <input className='board-write-title-textarea' type='text' placeholder='제목을 작성해주세요.' value={title} onChange={onTitleChangeHandler} />
+                        <textarea ref={titleRef} className='board-write-title-textarea' rows={1} placeholder='제목을 작성해주세요.' value={title} onChange={onTitleChangeHandler} />
                     </div>
                     <div className='divider'></div>
                     <div className='board-write-content-box'>
