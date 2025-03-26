@@ -25,6 +25,12 @@ export default function BoardWrite(){
     setTitle(value);
  }
 
+ // event handler: 내용 변경 이벤트 처리 //
+ const onContentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.target;
+    setContent(value);
+ }
+
  // effect: 마운트시 실행할 함수 //
  useEffect(() => {
     resetBoard();
@@ -40,7 +46,7 @@ export default function BoardWrite(){
                     </div>
                     <div className='divider'></div>
                     <div className='board-write-content-box'>
-                        <textarea ref={contentRef} className='board-write-content-textarea' placeholder='본문을 작성해주세요.' value={content} />
+                        <textarea ref={contentRef} className='board-write-content-textarea' placeholder='본문을 작성해주세요.' value={content} onChange={onContentChangeHandler} />
                         <div className='icon-button'>
                             <div className='icon image-box-light-icon'></div>
                         </div>
