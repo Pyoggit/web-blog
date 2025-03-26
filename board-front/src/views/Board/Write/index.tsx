@@ -54,6 +54,9 @@ export default function BoardWrite(){
     const newBoardImageFileList = boardImageFileList.map(item => item);
     newBoardImageFileList.push(file);
     setBoardImageFileList(newBoardImageFileList);
+
+    if(!imageInputRef.current) return;
+    imageInputRef.current.value = '';
  }
 
  // event handler: 이미지 업로드 버튼 클릭 이벤트 처리 //
