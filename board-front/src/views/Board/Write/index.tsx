@@ -41,6 +41,27 @@ export default function BoardWrite(){
     contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
  }
 
+ // event handler: 이미지 변경 이벤트 처리 //
+ const onImageChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    if(!event.target.files || !event.target.files.length) return;
+    const file = event.target.files[0];
+
+    const imageUrl = URL.createObjectURL(file);
+    const newImageUrls = imageUrls.map(item => item); //이미지 Url 복사
+    newImageUrls.push(imageUrl);
+    setImageUrls(newImageUrls);
+
+    const newBoardImageFileList = boardImageFileList.map(item => item);
+    newBoardImageFileList.push(file);
+    setBoardImageFileList(newBoardImageFileList);
+ }
+
+ // event handler: 이미지 업로드 버튼 클릭 이벤트 처리 //
+ const onImageUploadButtonClickHandler = () => {
+    if(!imageInputRef.current) return;
+    imageInputRef.current.click();
+ }
+
  // effect: 마운트시 실행할 함수 //
  useEffect(() => {
     resetBoard();
@@ -57,10 +78,10 @@ export default function BoardWrite(){
                     <div className='divider'></div>
                     <div className='board-write-content-box'>
                         <textarea ref={contentRef} className='board-write-content-textarea' placeholder='본문을 작성해주세요.' value={content} onChange={onContentChangeHandler} />
-                        <div className='icon-button'>
+                        <div className='icon-button' onClick={onImageUploadButtonClickHandler} >
                             <div className='icon image-box-light-icon'></div>
                         </div>
-                        <input ref={imageInputRef} type='file' accept='image/*' style={{display: 'none'}}/>
+                        <input ref={imageInputRef} type='file' accept='image/*' style={{display: 'none'}} onChange={onImageChangeHandler}/>
                     </div>
                     <div className='board-write-images-box'>
                         <div className='board-write-image-box'>
