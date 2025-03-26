@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import './style.css'
 import { useBoardStore } from '@/stores';
 
@@ -19,6 +19,12 @@ export default function BoardWrite(){
  // state: 게시물 이미지 미리보기 URL 상태 //
  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
+ // event handler: 제목 변경 이벤트 처리 //
+ const onTitleChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setTitle(value);
+ }
+
  // effect: 마운트시 실행할 함수 //
  useEffect(() => {
     resetBoard();
@@ -30,7 +36,7 @@ export default function BoardWrite(){
             <div className='board-write-container'>
                 <div className='board-write-box'>
                     <div className='board-write-title-box'>
-                        <input className='board-write-title-input' type='text' placeholder='제목을 작성해주세요.' value={title}/>
+                        <input className='board-write-title-input' type='text' placeholder='제목을 작성해주세요.' value={title} onChange={onTitleChangeHandler} />
                     </div>
                     <div className='divider'></div>
                     <div className='board-write-content-box'>
