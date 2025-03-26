@@ -58,10 +58,22 @@ export default function BoardWrite(){
 
  // event handler: 이미지 업로드 버튼 클릭 이벤트 처리 //
  const onImageUploadButtonClickHandler = () => {
+     if(!imageInputRef.current) return;
+     imageInputRef.current.click();
+    }
+    
+ // event handler: 이미지 닫기 버튼 클릭 이벤트 처리 //
+ const onImageCloseButtonClickHandler = (deleteIndex: number) => {
     if(!imageInputRef.current) return;
-    imageInputRef.current.click();
- }
+    imageInputRef.current.value = '';
 
+    const newImageUrls = imageUrls.filter((url, index) => index !== deleteIndex);
+    setImageUrls(newImageUrls);
+
+    const newBoardImageFileList = boardImageFileList.filter((file, index) => index !== deleteIndex);
+    setBoardImageFileList(newBoardImageFileList);
+ }
+ 
  // effect: 마운트시 실행할 함수 //
  useEffect(() => {
     resetBoard();
@@ -84,19 +96,14 @@ export default function BoardWrite(){
                         <input ref={imageInputRef} type='file' accept='image/*' style={{display: 'none'}} onChange={onImageChangeHandler}/>
                     </div>
                     <div className='board-write-images-box'>
+                        {imageUrls.map((imageUrl, index) => 
                         <div className='board-write-image-box'>
-                            <img className='board-write-image' src='/src/assets/image/testimage.png'/>
-                            <div className='icon-button image-close'>
+                            <img className='board-write-image' src={imageUrl}/>
+                            <div className='icon-button image-close' onClick={() => onImageCloseButtonClickHandler(index)} > 
                                 <div className='icon close-icon'></div>
                             </div>
                         </div>
-
-                        <div className='board-write-image-box'>
-                            <img className='board-write-image' src='https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbzAn0l%2Fbtr1Eei14iL%2Fduw3GVrk6X80DQAHeCKKwK%2Fimg.png'/>
-                            <div className='icon-button image-close'>
-                                <div className='icon close-icon'></div>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>
