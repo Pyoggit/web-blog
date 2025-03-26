@@ -5,6 +5,10 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import useLoginUserStore from '@/stores/login-user.store';
 import { useBoardStore } from '@/stores';
+import { fileUploadRequest, PostBoardRequest } from '@/apis';
+import { PostBoardRequestDto } from '@/apis/request/board';
+import { PostBoardResponseDto } from '@/apis/response/board';
+import { ResponseDto } from '@/apis/response';
 
 // component: 헤더 레이아웃 //
 export default function Header() {
@@ -41,8 +45,6 @@ const [isBoardUpdatePage, setBoardUpdatePage] = useState<boolean>(false);
 
 // state: 유저 페이지 상태 //
 const [isUserPage, setUserPage] = useState<boolean>(false);
-
-
 
 // function: 네비게이트 함수 //
 const navigate = useNavigate();
@@ -156,10 +158,41 @@ const UploadButton = () =>{
 
     // state: 게시물 상태 //
     const { title, content, boardImageFileList, resetBoard} = useBoardStore();
-    
-    // event handler: 업로드 버튼 클릭 이벤트 처리 함수 //
-    const {onUploadButtonClickHandler} = () =>{
 
+    // function: post board response 처리 함수 //
+    const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null ) => {
+        if(!responseBody)return;
+        const { code } = responseBody;
+        if(code === 'DBE') alert('데이터베이스 오류입니다.');
+        if(code === 'AF' || code === 'NU') navigate(AUTH_PATH());
+        if(code === 'VF') alert('제목과 내용은 필수입니다.');
+        if(code !== 'SU') return;
+
+        resetBoard();
+        if(!loginUser) return;
+        const { email } = loginUser;
+        navigate(USER_PATH(email));
+    }
+    
+    // event handler: 업로드 버튼 클릭 이벤트 처리 //
+    const onUploadButtonClickHandler = async () => {
+        const accessToken = cookies.accessToken;
+        if(!accessToken) return;
+        
+        const boardImageList: string[] = [];
+
+        for (const file of boardImageFileList){
+            const data = new FormData();
+            data.append('file', file);
+
+            const url = await fileUploadRequest(data);
+            if(url) boardImageList.push(url);
+        }
+
+        const requestBody: PostBoardRequestDto = {
+            title, content, boardImageList
+        }
+        PostBoardRequest(requestBody, accessToken).then(postBoardResponse);
     };
 
     // render: 업로드 버튼 컴포넌트 렌더링 //
@@ -206,7 +239,7 @@ useEffect(() => {
                     <div className="icon-box">
                         <div className="icon logo-main-icon"></div>
                     </div>
-                    <div className="header-logo">{'Pyo'}</div>
+                    <div className="header-logo">{'Pyonity'}</div>
                 </div>
                 <div className="header-right-box">
                 <div className='header-right-box'>
