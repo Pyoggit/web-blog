@@ -1,5 +1,6 @@
 package com.pyo.board_back.dto.response.board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import com.pyo.board_back.common.ResponseCode;
 import com.pyo.board_back.common.ResponseMessage;
 import com.pyo.board_back.dto.response.ResponseDto;
+import com.pyo.board_back.entity.ImageEntity;
+import com.pyo.board_back.repository.resultSet.GetBoardResultSet;
 
 import lombok.Getter;
 
@@ -23,12 +26,29 @@ public class GetBoardResponseDto extends ResponseDto {
     private String writerNickname;
     private String writerProfileImage;
 
-    private GetBoardResponseDto() {
+    private GetBoardResponseDto(GetBoardResultSet resultSet, List<ImageEntity> imageEntities) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+
+        List<String> boardImageList = new ArrayList<>();
+        for (ImageEntity imageEntity : imageEntities) {
+            String boardImage = imageEntity.getImage();
+            boardImageList.add(boardImage);
+        }
+
+        this.boardNumber = resultSet.getBoardNumber();
+        this.title = resultSet.getTitle();
+        this.content = resultSet.getContent();
+        this.boardImageList = boardImageList;
+        this.writeDatetime = resultSet.getWriteDatetime();
+        this.writerEmail = resultSet.getWriterEmail();
+        this.writerNickname = resultSet.getWriterNickname();
+        this.writerProfileImage = resultSet.getWriterProfileImage();
+
     }
 
-    public static ResponseEntity<GetBoardResponseDto> success() {
-        GetBoardResponseDto result = new GetBoardResponseDto();
+    public static ResponseEntity<GetBoardResponseDto> success(GetBoardResultSet resultSet,
+            List<ImageEntity> imageEntities) {
+        GetBoardResponseDto result = new GetBoardResponseDto(resultSet, imageEntities);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
