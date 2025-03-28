@@ -3,6 +3,10 @@
   width: 100%;
 }
 
+.emphasis {
+  font-weight: bolder;
+}
+
 .black-button {
   border-radius: 46px;
   width: 95px;
@@ -156,10 +160,34 @@
   background-image: url(assets/image/check-ring-light.png);
 }
 
-.image-box-light-icon{
+.image-box-light-icon {
   background-image: url(assets/image/image-box-light.png);
 }
 
-.close-icon{
+.close-icon {
   background-image: url(assets/image/close.png);
+}
+
+.more-icon {
+  background-image: url(assets/image/more.png);
+}
+
+.favorite-light-icon {
+  background-image: url(assets/image/favorite-light.png);
+}
+
+.favorite-fill-icon {
+  background-image: url(assets/image/favorite-fill.png);
+}
+
+.up-light-icon {
+  background-image: url(assets/image/expand-up-light.png);
+}
+
+.down-light-icon {
+  background-image: url(assets/image/expand-down-light.png);
+}
+
+.comment-icon {
+  background-image: url(assets/image/chat-light.png);
 }
