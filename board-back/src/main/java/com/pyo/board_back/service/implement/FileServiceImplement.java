@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.pyo.board_back.service.FileService;
 
 @Service
-public class FileServiceImplement implements FileService{
+public class FileServiceImplement implements FileService {
 
     @Value("${file.path}")
     private String filePath;
@@ -22,7 +22,8 @@ public class FileServiceImplement implements FileService{
     @Override
     public String upload(MultipartFile file) {
 
-        if (file.isEmpty()) return null;
+        if (file.isEmpty())
+            return null;
 
         String originalFileName = file.getOriginalFilename();
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
@@ -30,9 +31,9 @@ public class FileServiceImplement implements FileService{
         String saveFileName = uuid + extension;
         String savePath = filePath + saveFileName;
 
-        try{
+        try {
             file.transferTo(new File(savePath));
-        }catch(Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             return null;
         }
@@ -46,9 +47,9 @@ public class FileServiceImplement implements FileService{
 
         Resource resource = null;
 
-        try{
-            resource = new UrlResource("file" + filePath + fileName);
-        }catch(Exception exception){
+        try {
+            resource = new UrlResource("file:" + filePath + fileName);
+        } catch (Exception exception) {
             exception.printStackTrace();
             return null;
         }
@@ -56,5 +57,4 @@ public class FileServiceImplement implements FileService{
         return resource;
     }
 
-    
 }
