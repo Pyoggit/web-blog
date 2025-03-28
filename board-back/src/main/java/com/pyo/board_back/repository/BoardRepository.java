@@ -18,7 +18,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
             "B.board_number AS boardNumber, " +
             "B.title AS title, " +
             "B.content AS content, " +
-            "B.write_datetime AS writerDatetime, " +
+            "DATE_FORMAT(B.write_datetime, '%Y.%m.%d %H:%i') AS writeDatetime, " +
             "B.writer_email AS writerEmail, " +
             "U.nickname AS writerNickname, " +
             "U.profile_image AS writerProfileImage " +
