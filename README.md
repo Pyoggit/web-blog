@@ -29,20 +29,18 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
 |------|----------|
 | **개발 OS** | Mac OS |
 | **Front-End** | React, Vite, TypeScript, HTML5, CSS3, Axios |
-| **Back-End** | Spring Boot, JAVA |
+| **Back-End** | Spring Boot, Java, JPA |
 | **DB 서버** | MySQL 8.4.4 |
 | **JDK 버전** | JDK 17.0.14 |
 | **WAS** | Apache Tomcat 10.1.34 (Spring Boot 내장) |
-| **문서화** | Google Docs(Doc, Spreadsheet, Presentation) |
 | **형상관리** | GitHub |
 | **개발Tool** | Visual Studio Code |
-| **API** | Kakao login, Google login, Naverlogin, Daum Postcode |
+| **API** | Kakao login, Google login, Naver login, Daum Postcode |
 
 ---
 
 ## 📊 데이터 모델링
 ### 🔗 ERD  
-<p align="center">
 <img src="https://github.com/user-attachments/assets/9c4048a0-30a0-4504-8461-f05b3f5d3538">
 
 ---
