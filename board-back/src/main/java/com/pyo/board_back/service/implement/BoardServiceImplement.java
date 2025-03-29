@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import com.pyo.board_back.dto.request.board.PostBoardRequestDto;
 import com.pyo.board_back.dto.request.board.PostCommentRequestDto;
 import com.pyo.board_back.dto.response.ResponseDto;
+import com.pyo.board_back.dto.response.board.DeleteBoardResponseDto;
 import com.pyo.board_back.dto.response.board.GetBoardResponseDto;
 import com.pyo.board_back.dto.response.board.GetCommentListResponseDto;
 import com.pyo.board_back.dto.response.board.GetFavoriteListResponseDto;
+import com.pyo.board_back.dto.response.board.IncreaseViewCountResponseDto;
 import com.pyo.board_back.dto.response.board.PostBoardResponseDto;
 import com.pyo.board_back.dto.response.board.PostCommentResponseDto;
 import com.pyo.board_back.dto.response.board.PutFavoriteResponseDto;
@@ -53,11 +55,6 @@ public class BoardServiceImplement implements BoardService {
                 return GetBoardResponseDto.noExistBoard();
 
             imageEntities = imageRepository.findByBoardNumber(boardNumber);
-
-            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
-            boardEntity.increaseViewCount();
-            boardRepository.save(boardEntity);
-
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
@@ -191,5 +188,52 @@ public class BoardServiceImplement implements BoardService {
             return ResponseDto.databaseError();
         }
         return PutFavoriteResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber) {
+
+        try {
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null)
+                return IncreaseViewCountResponseDto.noExistBoard();
+
+            boardEntity.increaseViewCount();
+            boardRepository.save(boardEntity);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return IncreaseViewCountResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email) {
+        try {
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser)
+                return DeleteBoardResponseDto.noExistUser();
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null)
+                return DeleteBoardResponseDto.noExistBoard();
+
+            String writerEmail = boardEntity.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if (!isWriter)
+                return DeleteBoardResponseDto.noPermission();
+
+            imageRepository.deleteByBoardNumber(boardNumber);
+            commentRepository.deleteByBoardNumber(boardNumber);
+            favoriteRepository.deleteByBoardNumber(boardNumber);
+
+            boardRepository.delete(boardEntity);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return DeleteBoardResponseDto.success();
+
     }
 }
