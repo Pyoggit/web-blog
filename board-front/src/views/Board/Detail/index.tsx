@@ -342,7 +342,9 @@ export default function BoardDetail(){
                     <div className='board-detail-bottom-comment-container'>
                         <div className='board-detail-bottom-comment-title'>{'댓글'}<span className='emphasis'>{totalCommentCount}</span></div>
                         <div className='board-detail-bottom-comment-list-container'>
-                            {viewList.map(item => <CommentItem commentListItem={item} />)}
+                        {viewList.map((item, index) => (
+                            <CommentItem key={index} commentListItem={item} />
+                            ))}
                         </div>
                     </div>
                     <div className='divider'></div>

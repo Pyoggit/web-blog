@@ -114,7 +114,7 @@ export default function BoardWrite(){
                     </div>
                     <div className='board-write-images-box'>
                         {imageUrls.map((imageUrl, index) => 
-                        <div className='board-write-image-box'>
+                        <div key={imageUrl + index} className='board-write-image-box'>
                             <img className='board-write-image' src={imageUrl}/>
                             <div className='icon-button image-close' onClick={() => onImageCloseButtonClickHandler(index)} > 
                                 <div className='icon close-icon'></div>
