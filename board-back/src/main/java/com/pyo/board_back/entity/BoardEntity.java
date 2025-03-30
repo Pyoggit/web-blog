@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 
+import com.pyo.board_back.dto.request.board.PatchBoardRequestDto;
 import com.pyo.board_back.dto.request.board.PostBoardRequestDto;
 
 import jakarta.persistence.Entity;
@@ -46,7 +47,6 @@ public class BoardEntity {
         this.commentCount = 0;
         this.viewCount = 0;
         this.writerEmail = email;
-
     }
 
     public void increaseViewCount() {
@@ -63,5 +63,10 @@ public class BoardEntity {
 
     public void decreaseFavoriteCount() {
         this.favoriteCount--;
+    }
+
+    public void patchBoard(PatchBoardRequestDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
     }
 }
