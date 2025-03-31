@@ -12,7 +12,7 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
 > Pyonity
 
 ### 🗓 개발 기간
-> 2025.02.28 ~ (진행중)
+> 2025.02.28 ~ 2025.03.31
 
 ### 🎯 프로젝트 목적
 - 유저 간 자유롭게 소통하고 친목 도모가 가능한 게시판형 블로그 커뮤니티 플랫폼 개발
@@ -35,7 +35,7 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
 | **WAS** | Apache Tomcat 10.1.34 (Spring Boot 내장) |
 | **형상관리** | GitHub |
 | **개발Tool** | Visual Studio Code |
-| **API** | Kakao login, Google login, Naver login, Daum Postcode |
+| **API** | Daum Postcode |
 
 ---
 
