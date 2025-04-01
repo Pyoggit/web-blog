@@ -360,6 +360,7 @@ const onPasswordButtonClickHandler = () =>{
     
   }
 }
+
 // event handler: 패스워드 확인 버튼 클릭 이벤트 처리 //
 const onPasswordCheckButtonClickHandler = () =>{
   if(passwordCheckButtonIcon === 'eye-light-off-icon'){
@@ -480,23 +481,27 @@ const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =
   if (event.key !== 'Enter') return;
   onNextButtonClickHandler();
 };
+
 // event handler: 닉네임 입력 키 다운 이벤트 처리 //
 const onNicknameKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
   if(!telNumberRef.current) return;
   telNumberRef.current.focus();
 };
+
 // event handler: 휴대폰번호 입력 키 다운 이벤트 처리 //
 const onTelNumberKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
   onAddressButtonClickHandler();
 };
+
 // event handler: 주소 입력 키 다운 이벤트 처리 //
 const onAddressKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
   if(!addressDetailRef.current)return;
   addressDetailRef.current.focus();
 };
+
 // event handler: 상세 주소 입력 키 다운 이벤트 처리 //
 const onAddressDetailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
@@ -616,7 +621,6 @@ useEffect(() => {
           <div className='auth-container'>
             <div className='auth-jumbotron-box'>
               <div className='auth-jumbotron-contents'>
-                <div className='auth-logo-icon'></div>
                 <div className='auth-jumbotron-text-box'>
                   <div className='auth-jumbotron-text'>{'Welcome'}</div>
                   <div className='auth-jumbotron-text'>{'PYO의 커뮤니티.'}</div>
