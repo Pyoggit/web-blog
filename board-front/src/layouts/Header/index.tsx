@@ -147,7 +147,7 @@ const MyPageButton = () =>{
     return <div className='white-button' onClick={onSignOutButtonClickHandler}>{'로그아웃'}</div>;
     // render: 마이페이지 버튼 컴포넌트 렌더링 //
     if(isLogin)
-    return <div className='white-button' onClick={onMyPageButtonClickHandler}>{'마이페이지'}</div>;
+    return <div className='black-button' onClick={onMyPageButtonClickHandler}>{'마이페이지'}</div>;
     // render: 로그인 버튼 컴포넌트 렌더링 //
     return <div className='black-button' onClick={onSignInButtonClickHandler}>{'로그인'}</div>;
     
