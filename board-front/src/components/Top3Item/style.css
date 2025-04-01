@@ -8,18 +8,34 @@
   background-color: rgba(0, 0, 0, 0.5);
   background-position: 50% 50%;
   background-size: 100% 100%;
+  background-size: cover;
 
   cursor: pointer;
+
+  position: relative;
+  overflow: hidden;   
 }
 
 .top-3-list-item:hover {
   opacity: 0.9;
 }
 
+.top-3-list-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.1));
+  border-radius: 10px;
+  z-index: 0;
+}
+
 .top-3-list-item-main-box {
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  position: relative;
+  z-index: 1;
 }
 
 .top-3-list-item-top {

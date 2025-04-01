@@ -52,6 +52,9 @@ export default function BoardDetail(){
 
         // state: more 버튼 상태 //
         const [ showMore, setShowMore ] = useState<boolean>(false);
+        
+        // state: 삭제 버튼 클릭 상태 //
+        const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
         // function: get board response 처리 함수 //
         const getBoardResponse = (responseBody: GetBoardResponseDto | ResponseDto | null) => {
@@ -110,13 +113,24 @@ export default function BoardDetail(){
             navigate(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(board.boardNumber));
         }
 
-        // event handler: delete 버튼 클릭 이벤트 처리 //
+        // event handler: delete 재확인 버튼 클릭 이벤트 처리 //
         const onDeleteButtonClickHandler = () => {
-            if(!board || !loginUser || !boardNumber || !cookies.accessToken) return;
-            if(loginUser.email !== board.writerEmail) return;
+            setShowDeleteConfirm(true);
+        }
+        
+        // event handler: 삭제 확인 버튼 클릭 이벤트 처리 //
+        const onConfirmDeleteClickHandler = () => {
+            if (!board || !loginUser || !boardNumber || !cookies.accessToken) return;
+            if (loginUser.email !== board.writerEmail) return;
 
             deleteBoardRequest(boardNumber, cookies.accessToken).then(deleteBoardResponse);
-        }
+            setShowDeleteConfirm(false);
+        };
+        
+        // event handler: 삭제 취소 버튼 클릭 이벤트 처리 //
+        const onCancelDeleteClickHandler = () => {
+            setShowDeleteConfirm(false);
+        };
 
         // effect: 게시물 번호 path variable이 바뀔때마다 게시물 불러오기 //
         useEffect(() => {
@@ -147,9 +161,23 @@ export default function BoardDetail(){
                     }
                     {showMore &&
                     <div className='board-detail-more-box'>
-                        <div className='board-detail-update-button' onClick={onUpdateButtonClickHandler}>{'수정'}</div>
-                        <div className='divider'></div>
-                        <div className='board-detail-delete-button' onClick={onDeleteButtonClickHandler}>{'삭제'}</div>
+                        {!showDeleteConfirm ? (
+                        <>
+                            <div className='board-detail-update-button' onClick={onUpdateButtonClickHandler}>{'수정'}</div>
+                            <div className='divider'></div>
+                            <div className='board-detail-delete-button' onClick={onDeleteButtonClickHandler}>{'삭제'}</div>
+                        </>
+                        ) : (
+                        <div className="board-detail-confirm-modal">
+                            <div className="board-detail-confirm-text">
+                            정말 삭제하시겠습니까?<br />삭제하면 되돌릴 수 없습니다.
+                            </div>
+                            <div className="board-detail-confirm-button-group">
+                            <div className="confirm-button confirm" onClick={onConfirmDeleteClickHandler}>예</div>
+                            <div className="confirm-button cancel" onClick={onCancelDeleteClickHandler}>아니요</div>
+                            </div>
+                        </div>
+                        )}
                     </div>
                     }
                 </div>
