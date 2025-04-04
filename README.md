@@ -40,19 +40,35 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
 ---
 
 ## 📌 주요 기능
-1. **JWT 기반 인증 및 보안 강화**
+1. **로그인 / 로그아웃 기능**
    - Spring Security + JWT 인증 구조 구성
    - 프론트엔드에서 httpOnly 쿠키로 Access Token 저장 → JS 접근 차단
-   - 커스텀 인증 실패 응답을 설정하여 사용자에게 명확한 피드백 제공
+   - 로그인 여부에 따라 동적으로 마이페이지/로그인 버튼 렌더링
+   - 로그아웃 시 쿠키 삭제 + 사용자 상태 초기화
     <details>
-    <summary>[관련 코드보기]</summary>
+    <summary>💻관련코드</summary>
     <div markdown="1">
          
     ```ts
-    if (session.getAttribute("userName") == null) {
-      response.sendRedirect("login.jsp");
-          return;
-      }
+    //인증 필요 여부에 따라 헤더에 Authorization 토큰 자동 포함
+    const authorization = (accessToken: string) => {
+       return { headers: { Authorization: `Bearer ${accessToken}`} } 
+    };
+    
+    // 사용 예: 로그인한 유저 정보 요청
+    axios.get("/api/v1/user", authorization(accessToken));
+
+    // 로그인 상태 확인 후 마이페이지 / 로그인 버튼 렌더링
+    if (isLogin)
+     return <div className='black-button' onClick={onMyPageButtonClickHandler}>{'마이페이지'}</div>;
+     return <div className='black-button' onClick={onSignInButtonClickHandler}>{'로그인'}</div>;
+
+    // 로그아웃 버튼 클릭 시: 쿠키에서 accessToken 제거 및 상태 초기화
+    const onSignOutButtonClickHandler = () => {
+      resetLoginUser();
+      setCookie('accessToken', '', { path: '/', expires: new Date() });
+      navigate(MAIN_PATH());
+    };
     ```
     </div>
     </details>
@@ -62,18 +78,12 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
    - 클라이언트에서는 Axios를 모듈화하여 도메인, URL, 헤더 처리 등을 재사용 가능한 구조로 통합
    - TypeScript의 DTO 인터페이스를 활용하여 요청/응답의 타입 안정성 확보
    - 인증 실패, 서버 오류 등 에러 응답은 ResponseDto로 통일 처리하여 예외 상황에 일관된 대응 가능
+   - 커스텀 인증 실패 응답을 설정하여 사용자에게 명확한 피드백 제공
     <details>
-    <summary>[코드보기]</summary>
+    <summary>💻관련코드</summary>
     <div markdown="1">
        
     ```ts
-    //인증 필요 여부에 따라 헤더에 Authorization 토큰 자동 포함
-    const authorization = (token: string) => ({
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    axios.get("/api/v1/user", authorization(accessToken));
-
     //모든 요청 및 응답 객체에 대해 DTO 인터페이스 정의
     export const signInRequest = async (requestBody: SignInRequestDto): Promise<SignInResponseDto | ResponseDto | null> => {
     try {
@@ -91,58 +101,141 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
       }
     };
     
+    // 커스텀 인증 응답 코드를 통합 정의한 인터페이스
+    public interface ResponseCode {
+       // HTTP Status 200
+       String SUCCESS = "SU";
+   
+       // HTTP Status 400
+       String VALIDATION_FAILED = "VF";
+       String DUPLICATE_EMAIL = "DE";
+       String DUPLICATE_NICKNAME = "DN";
+       String DUPLICATE_TEL_NUMBER = "DT";
+       String NOT_EXISTED_USER = "NU";
+       String NOT_EXISTED_BOARD = "NB";
+   
+       // HTTP Status 401
+       String SIGN_IN_FAIL = "SF";
+       String AUTHORIZATION_FAIL = "AF";
+   
+       // HTTP Status 403
+       String NO_PERMISSION = "NP";
+   
+       // HTTP Status 500
+       String DATABASE_ERROR = "DBE";
+    }
     ```
     </div>
     </details>
 
 3. **프로필 관리 기능**
-   - 닉네임 및 프로필 이미지 변경 API
-   - 이미지 업로드 시 multipart/form-data 처리
+   - 사용자 인증을 기반으로 닉네임 및 프로필 이미지 변경 기능 제공
+   - 프로필 이미지 업로드: `multipart/form-data` 방식으로 이미지 파일 서버에 전송
+   - 업로드 후 서버에서 이미지 URL 반환 → 사용자 프로필 이미지로 설정 가능
     <details>
-    <summary>[코드보기]</summary>
+    <summary>💻관련코드</summary>
     <div markdown="1">
          
     ```ts
     const multipartFormData = { headers: { 'Content-Type' : 'multipart/form-data' } };
 
     export const fileUploadRequest = async (data: FormData) => {
-      const response = await axios.post(FILE_UPLOAD_URL(), data, multipartFormData);
-      return response.data as string;
+       const result = await axios.post(FILE_UPLOAD_URL(), data, multipartFormData)
+           .then(response => {
+               const responseBody: string = response.data;
+               return responseBody;
+           })
+           .catch(error =>{
+               return null;
+           })
+       return result;
     }
-
     ```
     </div>
     </details>
 
 4. **게시판 CRUD + 좋아요 + 조회수 기능**
-   - 본인 게시글 수정, 삭제 가능 (AccessToken 기반 인증)
+   - 로그인한 유저만 글 작성/수정/삭제 가능 (JWT AccessToken 기반 인증)
    - 게시글 상세 조회 시 자동 조회수 증가 API 호출
+   - 게시글 삭제 시 권한 확인 및 재확인 모달 처리
    - 좋아요 추가/삭제 → PUT 요청으로 처리
     <details>
-    <summary>[코드보기]</summary>
+    <summary>💻관련코드</summary>
     <div markdown="1">
          
     ```ts
-    if (session.getAttribute("userName") == null) {
-      response.sendRedirect("login.jsp");
-          return;
-      }
+    // AccessToken이 없을 경우 접근 불가
+   useEffect(() => {
+     const accessToken = cookies.accessToken;
+     if (!accessToken) {
+       navigate(MAIN_PATH());
+       return;
+     }
+     resetBoard(); // 새 게시물 작성 시 초기화
+    }, []);
+
+    // 좋아요 클릭 핸들러
+    const onFavoriteClickHandler = () => {
+     if (!loginUser || !cookies.accessToken || !boardNumber) return;
+     putFavoriteRequest(boardNumber, cookies.accessToken).then(putFavoriteResponse);
+    };
+   
+    // 게시물 삭제 처리
+    const onConfirmDeleteClickHandler = () => {
+     if (!board || !loginUser || !cookies.accessToken) return;
+     deleteBoardRequest(boardNumber, cookies.accessToken).then(deleteBoardResponse);
+    };
+
+    //게시물 조회수 증가 (마운트 이후 최초 렌더링 제외)
+    let effectFlag = true;
+    useEffect(() => {
+        if(!boardNumber) return;
+        if(effectFlag) {
+            effectFlag = false;
+            return;
+        }
+
+        increaseViewCountRequest(boardNumber) .then(increaseViewCountResponse);
+    },[boardNumber])
     ```
     </div>
     </details>
     
 5. **댓글 기능**
-    - 댓글 작성 시 AccessToken 필수
+    - 로그인한 사용자만 댓글 작성 가능 (AccessToken 필요)
+    - `dayjs`를 활용하여 작성 시간 기준으로 경과 시간(`n분 전`, `n시간 전`) 표시
     - 페이지 변경 시 댓글 목록 자동 업데이트
     <details>
-    <summary>[코드보기]</summary>
+    <summary>💻관련코드</summary>
     <div markdown="1">
          
     ```ts
-    if (session.getAttribute("userName") == null) {
-      response.sendRedirect("login.jsp");
-          return;
-      }
+    // 작성일 기준 경과 시간 반환 (dayjs 사용)
+    const getElapsedTime = () => {
+        const now = dayjs().add(9, 'hour');
+        const writeTime = dayjs(writeDatetime);
+      
+        const gap = now.diff(writeTime, 's');
+        if (gap < 60) return `${gap}초 전`;
+        if (gap < 3600) return `${Math.floor(gap / 60)}분 전`;
+        if (gap < 86400) return `${Math.floor(gap / 3600)}시간 전`;
+        return `${Math.floor(gap / 86400)}일 전`;
+    };
+
+    //댓글 작성 시 서버에 `POST /board/{boardNumber}/comment` 요청, 인증된 사용자만 허용
+    export const PostCommentRequest = async (boardNumber: number | string, requestBody: PostCommentRequestDto, accessToken: string ) =>  {
+       const result = await axios.post(POST_COMMENT_URL(boardNumber), requestBody, authorization(accessToken))
+           .then(response => {
+               const responseBody: PostCommentResponseDto = response.data;
+               return responseBody;
+           })
+           .catch(error =>{
+               if(!error.response) return null;
+               const responseBody: ResponseDto = error.response.data;
+               return responseBody;
+           })
+       return result;
+    }
     ```
     </div>
     </details>
@@ -151,14 +244,34 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
     - 키워드 기반(제목+내용) 게시글 검색
     - 관련 키워드 추천 기능 (서버 연관 검색어 응답)
     <details>
-    <summary>[코드보기]</summary>
+    <summary>💻관련코드</summary>
     <div markdown="1">
          
     ```ts
-    if (session.getAttribute("userName") == null) {
-      response.sendRedirect("login.jsp");
-          return;
-      }
+   // 검색 결과 요청 & 상태 업데이트
+   useEffect(() => {
+     if (!searchWord) return;
+   
+     getSearchBoardListRequest(searchWord, preSearchWord)
+       .then(getSearchBoardListResponse);
+     
+     getRelationListRequest(searchWord)
+       .then(getRelationListResponse);
+    }, [searchWord]);
+
+    // 검색 결과 응답 처리
+    const getSearchBoardListResponse = (responseBody: GetSearchBoardListResponseDto | ResponseDto | null ) => {
+        if (!responseBody) return;
+        const { code } = responseBody;
+        if (code === 'DBE') alert('데이터베이스 오류입니다.');
+        if (code !== 'SU') return;
+
+        if(!searchWord) return;
+        const { searchList } = responseBody as GetSearchBoardListResponseDto;
+        setTotalList(searchList);
+        setCount(searchList.length);
+        setPreSearchWord(searchWord);
+    }
     ```
     </div>
     </details>
@@ -168,14 +281,71 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
    - 한 페이지당 객체 5개 단위로 리스트 출력 (countPerPage 전달 가능)
    - 페이지 번호를 10개 단위 섹션으로 분리하여 구성 (currentSection, totalSection 상태 분리 관리)
     <details>
-    <summary>[코드보기]</summary>
+    <summary>💻관련코드</summary>
     <div markdown="1">
          
     ```ts
-    if (session.getAttribute("userName") == null) {
-      response.sendRedirect("login.jsp");
-          return;
-      }
+    const usePagination = <T>(countPerPage: number) => {
+     const [totalList, setTotalList] = useState<T[]>([]);
+     const [viewList, setViewList] = useState<T[]>([]);
+     const [currentPage, setCurrentPage] = useState<number>(1);
+     const [totalPageList, setTotalPageList] = useState<number[]>([1]);
+     const [viewPageList, setViewPageList] = useState<number[]>([1]);
+     const [currentSection, setCurrentSection] = useState<number>(1);
+     const [totalSection, setTotalSection] = useState<number>(1);
+
+       //현재 페이지 번호를 기준으로 slice된 리스트 설정
+       const setView = () => {
+           const FIRST_INDEX = countPerPage * (currentPage - 1 );
+           const LAST_INDEX = totalList.length > countPerPage * currentPage ? countPerPage * currentPage : totalList.length ;
+           const viewList = totalList.slice(FIRST_INDEX, LAST_INDEX);
+           setViewList(viewList);
+       }
+
+       //현재 섹션 번호를 기준으로 보여줄 페이지 번호 목록 설정
+       const setViewPage = () => {
+           const FIRST_INDEX = 10 * (currentSection - 1);
+           const LAST_INDEX = totalPageList.length > 10 * currentSection ? 10 * currentSection : totalPageList.length;
+           const viewPageList = totalPageList.slice(FIRST_INDEX, LAST_INDEX);
+           setViewPageList(viewPageList);
+   
+       }
+    
+       //전체 리스트가 변경되면 페이지/섹션 구조를 초기화하고 뷰 세팅
+       useEffect(() => {
+           const totalPage = Math.ceil(totalList.length / countPerPage);
+           const totalPageList: number[] = [];
+           for (let page = 1; page <= totalPage; page++) totalPageList.push(page);
+           setTotalPageList(totalPageList);
+   
+           const totalSection = Math.ceil(totalList.length / (countPerPage * 10));
+           setTotalSection(totalSection);
+   
+           setCurrentPage(1);
+           setCurrentSection(1);
+   
+           setView();
+           setViewPage();
+       }, [totalList]);
+
+       //현재 페이지가 바뀔 때마다 보여줄 리스트 다시 계산
+       useEffect(setView, [currentPage]);
+      
+       //현재 섹션이 바뀔 때마다 보여줄 페이지 번호 다시 계산
+       useEffect(setViewPage, [currentSection]);
+
+       // 반환 객체: 컴포넌트에서 필요한 모든 상태 및 제어 함수
+       return {
+          currentPage,
+          setCurrentPage,
+          currentSection,
+          setCurrentSection,
+          viewList,
+          viewPageList,
+          totalSection,
+          setTotalList
+         };
+       };
     ```
     </div>
     </details>
