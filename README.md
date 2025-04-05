@@ -358,9 +358,9 @@ JWT 기반 보안 인증/인가 흐름까지 직접 설계 및 구현해본 개�
 
 ---
 
-## 💻 실행 화면
+## 💻 실행 화면 (YouTube Linked)
 
-### (준비중)
+### [![YouTube Video](https://img.youtube.com/vi/4KIg7z7DzjM/0.jpg)](https://youtu.be/4KIg7z7DzjM)
 
 ---
 
